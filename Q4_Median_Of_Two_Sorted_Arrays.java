@@ -14,15 +14,15 @@ public class Q4_Median_Of_Two_Sorted_Arrays {
         int m = nums1.length;
         int n = nums2.length;
         int[] merged = new int[m + n];
-        
+
         for (int i = 0; i < m; i++) {
             merged[i] = nums1[i];
         }
-    
+
         for (int j = 0; j < n; j++) {
             merged[m + j] = nums2[j];
         }
-    
+
         Arrays.sort(merged);
         int total = merged.length;
         if (total % 2 == 0) {
@@ -35,7 +35,8 @@ public class Q4_Median_Of_Two_Sorted_Arrays {
     /**
      * Optimized Brute Force Approach (Two Pointers):
      * 1. Use two pointers to merge the arrays into a new array in sorted order.
-     * 2. This avoids the distinct sorting step, effectively doing a merge sort merge step.
+     * 2. This avoids the distinct sorting step, effectively doing a merge sort
+     * merge step.
      * 3. Return the median from the merged array.
      * 
      * Time Complexity: O(m+n).
@@ -64,14 +65,15 @@ public class Q4_Median_Of_Two_Sorted_Arrays {
             return merged[(m + n) / 2];
         }
     }
-        
 
     /**
      * Optimal Approach (Binary Search on Partition):
      * 1. Perform binary search on the smaller array to find a partition such that:
-     *    - All elements on the left side (from both arrays) are less than or equal to all elements on the right side.
-     *    - The left side has (m + n + 1) / 2 elements.
-     * 2. Calculate max of left elements and min of right elements to find the median.
+     * - All elements on the left side (from both arrays) are less than or equal to
+     * all elements on the right side.
+     * - The left side has (m + n + 1) / 2 elements.
+     * 2. Calculate max of left elements and min of right elements to find the
+     * median.
      * 
      * Time Complexity: O(log(min(m,n))).
      * Space Complexity: O(1).
@@ -103,10 +105,10 @@ public class Q4_Median_Of_Two_Sorted_Arrays {
         }
         return -1;
     }
-    
+
     public static void main(String[] args) {
-        int[] nums1 = {1, 3};
-        int[] nums2 = {2};
+        int[] nums1 = { 1, 3, 8, 9 };
+        int[] nums2 = { 7, 11, 18, 19, 21, 25 };
         System.out.println("Brute Force: " + findMedianSortedArrays_BruteForce(nums1, nums2));
         System.out.println("Brute Force Optimized: " + findMedianSortedArrays_BruteForce_Optimized(nums1, nums2));
         System.out.println("Optimal: " + findMedianSortedArrays_Optimal(nums1, nums2));
