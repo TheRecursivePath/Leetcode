@@ -1,0 +1,114 @@
+import java.util.Arrays;
+
+public class Q4_Median_Of_Two_Sorted_Arrays {
+    /**
+     * Brute Force Approach:
+     * 1. Merge both arrays into a single array.
+     * 2. Sort the merged array.
+     * 3. Return the median based on the length of the merged array.
+     * 
+     * Time Complexity: O((m+n) * log(m+n)) due to sorting.
+     * Space Complexity: O(m+n) for the merged array.
+     */
+    public static double findMedianSortedArrays_BruteForce(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int[] merged = new int[m + n];
+        
+        for (int i = 0; i < m; i++) {
+            merged[i] = nums1[i];
+        }
+    
+        for (int j = 0; j < n; j++) {
+            merged[m + j] = nums2[j];
+        }
+    
+        Arrays.sort(merged);
+        int total = merged.length;
+        if (total % 2 == 0) {
+            return (merged[total / 2 - 1] + merged[total / 2]) / 2.0;
+        } else {
+            return merged[total / 2];
+        }
+    }
+
+    /**
+     * Optimized Brute Force Approach (Two Pointers):
+     * 1. Use two pointers to merge the arrays into a new array in sorted order.
+     * 2. This avoids the distinct sorting step, effectively doing a merge sort merge step.
+     * 3. Return the median from the merged array.
+     * 
+     * Time Complexity: O(m+n).
+     * Space Complexity: O(m+n).
+     */
+    public static double findMedianSortedArrays_BruteForce_Optimized(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        int[] merged = new int[m + n];
+        int i = 0, j = 0, k = 0;
+        while (i < m && j < n) {
+            if (nums1[i] < nums2[j]) {
+                merged[k++] = nums1[i++];
+            } else {
+                merged[k++] = nums2[j++];
+            }
+        }
+        while (i < m) {
+            merged[k++] = nums1[i++];
+        }
+        while (j < n) {
+            merged[k++] = nums2[j++];
+        }
+        if ((m + n) % 2 == 0) {
+            return (merged[(m + n) / 2 - 1] + merged[(m + n) / 2]) / 2.0;
+        } else {
+            return merged[(m + n) / 2];
+        }
+    }
+        
+
+    /**
+     * Optimal Approach (Binary Search on Partition):
+     * 1. Perform binary search on the smaller array to find a partition such that:
+     *    - All elements on the left side (from both arrays) are less than or equal to all elements on the right side.
+     *    - The left side has (m + n + 1) / 2 elements.
+     * 2. Calculate max of left elements and min of right elements to find the median.
+     * 
+     * Time Complexity: O(log(min(m,n))).
+     * Space Complexity: O(1).
+     */
+    public static double findMedianSortedArrays_Optimal(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        if (m > n) {
+            return findMedianSortedArrays_Optimal(nums2, nums1);
+        }
+        int low = 0, high = m;
+        while (low <= high) {
+            int partition1 = (low + high) / 2;
+            int partition2 = (m + n + 1) / 2 - partition1;
+            int L1 = (partition1 == 0) ? Integer.MIN_VALUE : nums1[partition1 - 1];
+            int R1 = (partition1 == m) ? Integer.MAX_VALUE : nums1[partition1];
+            int L2 = (partition2 == 0) ? Integer.MIN_VALUE : nums2[partition2 - 1];
+            int R2 = (partition2 == n) ? Integer.MAX_VALUE : nums2[partition2];
+            if (L1 <= R2 && L2 <= R1) {
+                if ((m + n) % 2 == 0) {
+                    return (Math.max(L1, L2) + Math.min(R1, R2)) / 2.0;
+                } else {
+                    return Math.max(L1, L2);
+                }
+            } else if (L1 > R2) {
+                high = partition1 - 1;
+            } else {
+                low = partition1 + 1;
+            }
+        }
+        return -1;
+    }
+    
+    public static void main(String[] args) {
+        int[] nums1 = {1, 3};
+        int[] nums2 = {2};
+        System.out.println("Brute Force: " + findMedianSortedArrays_BruteForce(nums1, nums2));
+        System.out.println("Brute Force Optimized: " + findMedianSortedArrays_BruteForce_Optimized(nums1, nums2));
+        System.out.println("Optimal: " + findMedianSortedArrays_Optimal(nums1, nums2));
+    }
+}
